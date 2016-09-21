@@ -31,10 +31,19 @@ class DataAnalyser:
                 else:
                     featureDict[feature][data[feature]] = [0,0]
                     featureDict[feature][data[feature]][data[label_index]] += 1
+
+        featureDict = self.calculateInfoGain(featureDict=featureDict)
         pprint(featureDict)
 
-        self.calculateInfoGain(featureDict=featureDict)
-        return
+        # find the feature with max
+        #   information gain
+        max_gain = 0.0
+        for key, value in featureDict.iteritems():
+            if value['info-gain'] > max_gain:
+                max_gain = value['info-gain']
+                max_gain_feature = key
+
+        return {max_gain_feature: featureDict[max_gain_feature]}
 
     def calculateInfoGain(self, featureDict):
 
@@ -65,8 +74,8 @@ class DataAnalyser:
             dict['info-gain'] = parent_entropy - sum_feature_entropy
             featureDict[featureIndex] = dict
 
-        pprint(featureDict)
-        pass
+        # pprint(featureDict)
+        return featureDict
 
 
     def calculateEntropy(self, posCount=0, negCount=0):
