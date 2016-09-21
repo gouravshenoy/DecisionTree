@@ -38,7 +38,7 @@ class DataAnalyser:
         # find the feature with max
         #   information gain
         max_gain = 0.0
-        for key, value in featureDict.iteritems():
+        for key, value in featureDict.items():
             if value['info-gain'] > max_gain:
                 max_gain = value['info-gain']
                 max_gain_feature = key
@@ -47,10 +47,10 @@ class DataAnalyser:
 
     def calculateInfoGain(self, featureDict):
 
-        for featureIndex, dict in featureDict.iteritems():
+        for featureIndex, dict in featureDict.items():
             total_pos_count = 0
             total_neg_count = 0
-            for featureValue, featureCounts in dict.iteritems():
+            for featureValue, featureCounts in dict.items():
                 total_pos_count += featureCounts[True.__int__()]
                 total_neg_count += featureCounts[False.__int__()]
 
@@ -59,7 +59,7 @@ class DataAnalyser:
             # print parent_entropy
 
             sum_feature_entropy = 0.0
-            for featureValue, featureCounts in dict.iteritems():
+            for featureValue, featureCounts in dict.items():
                 # norm_prob = |Sv| / |S|
                 norm_prob = float(sum(featureCounts)) / (total_pos_count + total_neg_count)
 
