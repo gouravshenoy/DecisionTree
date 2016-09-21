@@ -19,6 +19,8 @@ decisionTree = DecisionTree.DecisionTree()
 decisionTree.train(data, Constants.TREE_DEPTH)
 decisionTree.printTree()
 
+
+
 #TO-TEST:
 #print('Matrix:')
 # print(data.getMatrix())
