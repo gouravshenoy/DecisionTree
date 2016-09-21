@@ -1,11 +1,14 @@
 import math
+import Constants
+from collections import Counter
 
+from pprint import pprint
 
 class DataAnalyser:
 
-    def analyseInfoGain(self, dataSet, filterIndex=[], availableFeatures=[]):
-        for index, data in enumerate(dataSet.getMatrix()):
-            print '{index}, {list}'.format(index=index, list=data)
+    def analyseFeatures(self, dataSet, filterIndex=[], availableFeatures=[]):
+        # for index, data in enumerate(dataSet.getMatrix()):
+        #     print '{index}, {list}'.format(index=index, list=data)
 
         # if no filterIndex, scan full dataSet,
         #   else, create filtered dataSet
@@ -16,18 +19,63 @@ class DataAnalyser:
         # this data-structure holds vital information
         #   about the features, incl pos,neg counts
         featureDict = {}
+        filteredLabels = []
+
         for feature in availableFeatures:
             featureDict[feature] = {}
             for index, data in enumerate(filtered_data):
-                featureDict[feature]
+                label_index = len(data) - 1
 
+                if data[feature] in featureDict[feature]:
+                    featureDict[feature][data[feature]][data[label_index]] += 1
+                else:
+                    featureDict[feature][data[feature]] = [0,0]
+                    featureDict[feature][data[feature]][data[label_index]] += 1
+        pprint(featureDict)
 
-
+        self.calculateInfoGain(featureDict=featureDict)
         return
+
+    def calculateInfoGain(self, featureDict):
+
+        for featureIndex, dict in featureDict.iteritems():
+            total_pos_count = 0
+            total_neg_count = 0
+            for featureValue, featureCounts in dict.iteritems():
+                total_pos_count += featureCounts[True.__int__()]
+                total_neg_count += featureCounts[False.__int__()]
+
+            # print total_pos_count, total_neg_count
+            parent_entropy = self.calculateEntropy(total_pos_count, total_neg_count)
+            # print parent_entropy
+
+            sum_feature_entropy = 0.0
+            for featureValue, featureCounts in dict.iteritems():
+                # norm_prob = |Sv| / |S|
+                norm_prob = float(sum(featureCounts)) / (total_pos_count + total_neg_count)
+
+                # we calculate sum of entropies
+                #   of all feature values
+                sum_feature_entropy += (norm_prob) * \
+                                    self.calculateEntropy(featureCounts[True.__int__()],
+                                                          featureCounts[False.__int__()])
+
+            # subtract parent entropy from
+            #   sum of feature entropies to get info-gain
+            dict['info-gain'] = parent_entropy - sum_feature_entropy
+            featureDict[featureIndex] = dict
+
+        pprint(featureDict)
+        pass
 
 
     def calculateEntropy(self, posCount=0, negCount=0):
-        p_pos = float(posCount) / (posCount + negCount)
-        p_neg = float(negCount) / (posCount + negCount)
-        entropy = -(p_pos * math.log(p_pos, 2)) - (p_neg * math.log(p_neg, 2))
+        # if either count is 0,
+        #   then entropy is 0
+        if posCount>0 and negCount>0:
+            p_pos = float(posCount) / (posCount + negCount)
+            p_neg = float(negCount) / (posCount + negCount)
+            entropy = -(p_pos * math.log(p_pos, 2)) - (p_neg * math.log(p_neg, 2))
+        else:
+            entropy = 0
         return entropy

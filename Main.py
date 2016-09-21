@@ -16,4 +16,4 @@ data.setMatrix(matrix)
 #TO-TEST:
 print('Matrix:')
 # print(data.getMatrix())
-analyser.analyseInfoGain(dataSet=data, filterIndex=[0,2,5,7])
+analyser.analyseInfoGain(dataSet=data, filterIndex=[], availableFeatures=[0,4,5])
