@@ -13,7 +13,7 @@ class Data:
 
     def getAvailableFeatures(self):
         matrix = self.__matrix
-        return list(range(0,len(matrix[0])))
+        return list(range(0,len(matrix[0])-1))
 
     def getFeaturesBreakDown(self):
         features = self.getAvailableFeatures()

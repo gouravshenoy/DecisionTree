@@ -1,4 +1,6 @@
 import  DataAnalyser
+from pprint import pprint
+
 
 class DecisionTree:
 
@@ -13,44 +15,65 @@ class DecisionTree:
         self.__rootNode = self.createNode(data, indices, availableFeatures, 1)
 
 
-    def createNode(self, data, subsetIndices, availableFeatures, nodeDepth):
+    def createNode(self, data, subsetIndices, availableFeatures, nodeDepth, positiveCount =-1, negativeCount=-1):
 
         dataAnalyser = DataAnalyser.DataAnalyser()
-        featureBreakDown = dataAnalyser.analyze(data, subsetIndices, availableFeatures)
-        featureBreakDown = {1:{1:(5,3), 2:(5,4)}}
+        print("\nNode Data--")
+        print("Subset Indices: ", subsetIndices)
+        print("Available Features: ", availableFeatures)
+
+        # Check if the node has pure class
+        if (positiveCount == 0 or negativeCount == 0):
+            positiveRatio = positiveCount / (positiveCount + negativeCount)
+            negativeRatio = negativeCount / (negativeCount + positiveCount)
+            node = Node(-1, positiveRatio, negativeRatio, nodeDepth)
+            return node
+
+        # If node is not pure get the feature breakdown from analyzer
+        featureBreakDown = dataAnalyser.analyseFeatures(data, subsetIndices, availableFeatures)
+        print("Feature Breakdown from Analyzer: ")
+        pprint(featureBreakDown)
         feature = list(featureBreakDown.keys())[0]
-        featureValues = list(featureBreakDown.get(feature).keys())
+        featureValues = list(featureBreakDown.get(feature).keys())[:-1]
+
+        #print("FeatureValue: " , featureValues)
 
         # calculate positive and negative class ratio
-        negativeCount = 0
-        positiveCount = 0
-        for featureValue in featureValues:
-            negativeCount += featureBreakDown.get(feature).get(featureValue)[0]
-            positiveCount += featureBreakDown.get(feature).get(featureValue)[1]
+        if(positiveCount == -1 or negativeCount == -1):
+            negativeCount = 0
+            positiveCount = 0
+            for featureValue in featureValues:
+                negativeCount += featureBreakDown.get(feature).get(featureValue)[0]
+                positiveCount += featureBreakDown.get(feature).get(featureValue)[1]
 
         positiveRatio = positiveCount/(positiveCount+negativeCount)
         negativeRatio = negativeCount/(negativeCount+positiveCount)
-        node = Node(feature, positiveRatio, negativeRatio)
+        node = Node(feature, positiveRatio, negativeRatio, nodeDepth)
 
-        childrenAvailableFeatures = availableFeatures.remove(feature)
+
+        childrenAvailableFeatures = list(availableFeatures)
+        childrenAvailableFeatures.remove(feature)
         childrenNodeDepth = nodeDepth + 1
         if self.isTerminationCondition(childrenNodeDepth, positiveRatio, childrenAvailableFeatures) == False:
             for featureValue in featureValues:
                 childSubsetIndices = data.getDataIndices(feature, featureValue, subsetIndices)
-                childNode = self.createNode(data, childSubsetIndices, childrenAvailableFeatures, childrenNodeDepth)
+                childNode = self.createNode(data, childSubsetIndices,
+                                            childrenAvailableFeatures, childrenNodeDepth,
+                                            featureBreakDown.get(feature).get(featureValue)[1],
+                                            featureBreakDown.get(feature).get(featureValue)[0])
                 node.addChildren(featureValue, childNode)
 
         return node
 
-    def isTerminationCondition(self, childNodeDepth, positiveRaio, childrenAvailableFeatures):
+    def isTerminationCondition(self, childNodeDepth, positiveRatio, childrenAvailableFeatures):
         isTerminationCondition = False
-
-        if(positiveRaio == 1
-            | positiveRaio == 0
-            | childNodeDepth > self.__treeDepth
-            | len(childrenAvailableFeatures) == 0):
+        if(positiveRatio == 1
+            or positiveRatio == 0
+            or childNodeDepth > self.__treeDepth
+            or not childrenAvailableFeatures):
             isTerminationCondition = True
 
+        #print('Is Terminated: ', isTerminationCondition)
         return isTerminationCondition
 
     def test(self, data):
@@ -113,11 +136,14 @@ class Node:
             return 0
 
     def printNode(self):
-        print("\n\nNode Feature: ", self.getFeatureIndex)
+        print("\n\nNode Feature: ", self.getFeatureIndex())
         if self.getChildren() != -1:
-            print("\nNode Children: ")
-            for node in self.getChildren():
-                print(" | ", node.getFeatureIndex())
+            print("Node Children: ")
+            for branchValue in self.getChildren():
+                #print("Node-",node)
+                print("Child:", branchValue, " | ", self.getChildren()[branchValue].getFeatureIndex())
 
-            for node in self.getChildren():
+            for node in self.getChildren().values():
                 node.printNode()
+        else:
+            print("NO CHILD")

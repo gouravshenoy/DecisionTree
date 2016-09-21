@@ -3,6 +3,7 @@ import DataAnalyser
 import InputHandler
 import Constants
 import Data
+import DecisionTree
 
 data = Data.Data()
 inputHandler = InputHandler.InputHandler()
@@ -13,7 +14,11 @@ matrix = inputHandler.readFile(Constants.INPUT_FILE_TRAIN,
                                     Constants.FEATURE_INDICES)
 
 data.setMatrix(matrix)
+
+decisionTree = DecisionTree.DecisionTree()
+decisionTree.train(data, Constants.TREE_DEPTH)
+decisionTree.printTree()
+
 #TO-TEST:
-print('Matrix:')
+#print('Matrix:')
 # print(data.getMatrix())
-analyser.analyseInfoGain(dataSet=data, filterIndex=[], availableFeatures=[0,4,5])
