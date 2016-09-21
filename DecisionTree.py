@@ -24,6 +24,7 @@ class DecisionTree:
 
         # Check if the node has pure class
         if (positiveCount == 0 or negativeCount == 0):
+            # Creating a pure class leaf node and return
             positiveRatio = positiveCount / (positiveCount + negativeCount)
             negativeRatio = negativeCount / (negativeCount + positiveCount)
             node = Node(-1, positiveRatio, negativeRatio, nodeDepth)
@@ -34,11 +35,12 @@ class DecisionTree:
         print("Feature Breakdown from Analyzer: ")
         pprint(featureBreakDown)
         feature = list(featureBreakDown.keys())[0]
-        featureValues = list(featureBreakDown.get(feature).keys())[:-1]
+        featureValues = list(featureBreakDown.get(feature).keys())
+        featureValues.remove('info-gain')
 
         #print("FeatureValue: " , featureValues)
 
-        # calculate positive and negative class ratio
+        # calculate positive and negative class ratio at the node
         if(positiveCount == -1 or negativeCount == -1):
             negativeCount = 0
             positiveCount = 0
@@ -46,11 +48,14 @@ class DecisionTree:
                 negativeCount += featureBreakDown.get(feature).get(featureValue)[0]
                 positiveCount += featureBreakDown.get(feature).get(featureValue)[1]
 
-        positiveRatio = positiveCount/(positiveCount+negativeCount)
-        negativeRatio = negativeCount/(negativeCount+positiveCount)
+        positiveRatio = float(positiveCount/(positiveCount+negativeCount))
+        negativeRatio = float(negativeCount/(negativeCount+positiveCount))
+
+        # Create a new node
         node = Node(feature, positiveRatio, negativeRatio, nodeDepth)
 
 
+        # Create child nodes for each possible value feature can take
         childrenAvailableFeatures = list(availableFeatures)
         childrenAvailableFeatures.remove(feature)
         childrenNodeDepth = nodeDepth + 1
@@ -92,6 +97,7 @@ class DecisionTree:
         return predictedLabel
 
     def printTree(self):
+        print('\n****Printing decision Tree-***')
         self.__rootNode.printNode()
 
 class Node:
@@ -136,12 +142,13 @@ class Node:
             return 0
 
     def printNode(self):
-        print("\n\nNode Feature: ", self.getFeatureIndex())
+        print("\n\nNode Feature:", self.getFeatureIndex(), "| ClassLabel:", self.getClassLabel())
         if self.getChildren() != -1:
             print("Node Children: ")
             for branchValue in self.getChildren():
                 #print("Node-",node)
-                print("Child:", branchValue, " | ", self.getChildren()[branchValue].getFeatureIndex())
+                print("Child:: Branch-value:", branchValue,
+                      " | Feature:", self.getChildren()[branchValue].getFeatureIndex())
 
             for node in self.getChildren().values():
                 node.printNode()
