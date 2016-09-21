@@ -1,5 +1,7 @@
 import math
+import Constants
 
+from pprint import pprint
 
 class DataAnalyser:
 
@@ -19,10 +21,13 @@ class DataAnalyser:
         for feature in availableFeatures:
             featureDict[feature] = {}
             for index, data in enumerate(filtered_data):
-                featureDict[feature]
+                label_index = len(data) - 1
+                if data[feature] in featureDict[feature]:
+                    featureDict[feature][data[feature]][data[label_index]] += 1
+                else:
+                    featureDict[feature][data[feature]] = [0,0]
 
-
-
+        pprint(featureDict)
         return
 
 
