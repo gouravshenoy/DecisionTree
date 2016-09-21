@@ -6,10 +6,11 @@ import Data
 data = Data.Data()
 inputHandler = InputHandler.InputHandler()
 
-data.matrix = inputHandler.readFile(Constants.INPUT_FILE_TRAIN,
+matrix = inputHandler.readFile(Constants.INPUT_FILE_TRAIN,
                                     Constants.LABEL_INDEX,
                                     Constants.FEATURE_INDICES)
 
+data.setMatrix(matrix)
 #TO-TEST:
 print('Matrix:')
 print(data.matrix)
