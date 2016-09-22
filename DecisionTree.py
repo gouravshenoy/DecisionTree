@@ -48,9 +48,11 @@ class DecisionTree:
                 negativeCount += featureBreakDown.get(feature).get(featureValue)[0]
                 positiveCount += featureBreakDown.get(feature).get(featureValue)[1]
 
-        positiveRatio = float(positiveCount/(positiveCount+negativeCount))
-        negativeRatio = float(negativeCount/(negativeCount+positiveCount))
+        positiveRatio = float(positiveCount)/(positiveCount+negativeCount)
+        negativeRatio = float(negativeCount)/(negativeCount+positiveCount)
 
+        print (positiveRatio)
+        print (negativeRatio)
         # Create a new node
         node = Node(feature, positiveRatio, negativeRatio, nodeDepth)
 
