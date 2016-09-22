@@ -57,7 +57,7 @@ class DecisionTree:
         node = Node(feature, positiveRatio, negativeRatio, nodeDepth)
 
 
-        # Create child nodes for each possible value feature can take
+        # Create branches and child nodes for each possible value feature can take
         childrenAvailableFeatures = list(availableFeatures)
         childrenAvailableFeatures.remove(feature)
         childrenNodeDepth = nodeDepth + 1
