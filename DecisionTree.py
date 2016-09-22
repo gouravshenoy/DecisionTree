@@ -1,9 +1,14 @@
-import  DataAnalyser
+# imports used for drawing DT (Optional)
+import uuid
+import pydot
+
+# imports for computation
+import Constants
+import DataAnalyser
 from pprint import pprint
 
 
 class DecisionTree:
-
     __rootNode = -1
     __treeDepth = -1
 
@@ -14,8 +19,7 @@ class DecisionTree:
         self.__treeDepth = treeDepth
         self.__rootNode = self.createNode(data, indices, availableFeatures, 1)
 
-
-    def createNode(self, data, subsetIndices, availableFeatures, nodeDepth, positiveCount =-1, negativeCount=-1):
+    def createNode(self, data, subsetIndices, availableFeatures, nodeDepth, positiveCount=-1, negativeCount=-1):
 
         dataAnalyser = DataAnalyser.DataAnalyser()
         print("\nNode Data--")
@@ -38,24 +42,23 @@ class DecisionTree:
         featureValues = list(featureBreakDown.get(feature).keys())
         featureValues.remove('info-gain')
 
-        #print("FeatureValue: " , featureValues)
+        # print("FeatureValue: " , featureValues)
 
         # calculate positive and negative class ratio at the node
-        if(positiveCount == -1 or negativeCount == -1):
+        if (positiveCount == -1 or negativeCount == -1):
             negativeCount = 0
             positiveCount = 0
             for featureValue in featureValues:
                 negativeCount += featureBreakDown.get(feature).get(featureValue)[0]
                 positiveCount += featureBreakDown.get(feature).get(featureValue)[1]
 
-        positiveRatio = float(positiveCount)/(positiveCount+negativeCount)
-        negativeRatio = float(negativeCount)/(negativeCount+positiveCount)
+        positiveRatio = float(positiveCount) / (positiveCount + negativeCount)
+        negativeRatio = float(negativeCount) / (negativeCount + positiveCount)
 
         print (positiveRatio)
         print (negativeRatio)
         # Create a new node
         node = Node(feature, positiveRatio, negativeRatio, nodeDepth)
-
 
         # Create branches and child nodes for each possible value feature can take
         childrenAvailableFeatures = list(availableFeatures)
@@ -74,13 +77,13 @@ class DecisionTree:
 
     def isTerminationCondition(self, childNodeDepth, positiveRatio, childrenAvailableFeatures):
         isTerminationCondition = False
-        if(positiveRatio == 1
+        if (positiveRatio == 1
             or positiveRatio == 0
             or childNodeDepth > self.__treeDepth
             or not childrenAvailableFeatures):
             isTerminationCondition = True
 
-        #print('Is Terminated: ', isTerminationCondition)
+        # print('Is Terminated: ', isTerminationCondition)
         return isTerminationCondition
 
     def test(self, data):
@@ -89,7 +92,7 @@ class DecisionTree:
 
         for dataPoint in data:
             currentNode = rootNode
-            while(currentNode.getChildren() != -1):
+            while (currentNode.getChildren() != -1):
                 featureToTest = currentNode.getFeatureIndex()
                 dataPointValue = dataPoint[featureToTest]
                 children = currentNode.getChildren()
@@ -100,11 +103,13 @@ class DecisionTree:
 
     def printTree(self):
         print('\n****Printing decision Tree-***')
-        self.__rootNode.printNode()
+        self.__rootNode.drawNode()
+        Constants.GRAPH.write_png('decision_tree-depth-' + str(Constants.TREE_DEPTH) + '.png')
+
 
 class Node:
     __featureIndex = -1
-    __children =  {}
+    __children = {}
     __positiveRatio = 0
     __negativeRatio = 0
     __nodeDepth = -1
@@ -148,7 +153,7 @@ class Node:
         if self.getChildren() != -1:
             print("Node Children: ")
             for branchValue in self.getChildren():
-                #print("Node-",node)
+                # print("Node-",node)
                 print("Child:: Branch-value:", branchValue,
                       " | Feature:", self.getChildren()[branchValue].getFeatureIndex())
 
@@ -156,3 +161,28 @@ class Node:
                 node.printNode()
         else:
             print("NO CHILD")
+
+    def drawNode(self):
+        node_name = "Feature: " + str(self.getFeatureIndex()) \
+                    + "\nClass-Label: %d" % self.getClassLabel() \
+                    + "\nDepth: %d" % self.getNodeDepth() \
+                    + "\nPos-Ratio: " + str(self.getPositiveRatio()) \
+                    + "\nNeg-Ratio: " + str(self.negativeRatio())
+        # print (node_name)
+        if self.getChildren() != -1:
+            dt_node = pydot.Node(str(uuid.uuid4()),
+                                 style="filled",
+                                 fillcolor="yellow",
+                                 label=node_name)
+
+            for branchValue in self.getChildren():
+                child_node = self.getChildren()[branchValue].drawNode()
+                Constants.GRAPH.add_edge(pydot.Edge(dt_node, child_node, label=str(branchValue)))
+        else:
+            dt_node = pydot.Node(str(uuid.uuid4()),
+                                 style="filled",
+                                 fillcolor="green",
+                                 label=node_name)
+
+        Constants.GRAPH.add_node(dt_node)
+        return dt_node
