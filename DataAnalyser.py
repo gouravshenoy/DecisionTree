@@ -39,7 +39,7 @@ class DataAnalyser:
         #   information gain
         max_gain = 0.0
         for key, value in featureDict.items():
-            if value['info-gain'] > max_gain:
+            if value['info-gain'] >= max_gain:
                 max_gain = value['info-gain']
                 max_gain_feature = key
 
