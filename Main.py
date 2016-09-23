@@ -3,6 +3,7 @@ import Data
 import Constants
 import InputHandler
 import DecisionTree
+import ResultPlotter
 
 # import used for creating csv file
 import csv
@@ -168,7 +169,7 @@ class Main:
     def plot_accuracy_graph(self):
         # csv library is used only for writing the csv file
         #   csv file is used for plotting graph
-        with open('dt_accuracies.csv', 'w') as csvfile:
+        with open(Constants.RESULT_FILE, 'w') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(['Depth of Tree', 'Monk-1 Accuracy', 'Monk-2 Accuracy', 'Monk-3 Accuracy', 'Avg. Accuracy'])
             for depth, accuracy in self.__avg_accuracies.items():
@@ -176,6 +177,7 @@ class Main:
                                  self.__monk_accuracies[0][depth],
                                  self.__monk_accuracies[1][depth],
                                  self.__monk_accuracies[2][depth], accuracy])
+            ResultPlotter.plotResults()
         pass
 
 # run main function
@@ -187,4 +189,3 @@ if __name__ == '__main__':
 
     # run DT algorithm on own data-set
     # main_obj.run_own()
-
