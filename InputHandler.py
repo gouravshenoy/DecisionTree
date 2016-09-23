@@ -1,6 +1,9 @@
 import os.path
 
 class InputHandler:
+    """
+    This is InputHandler class responsible for reading inputs to the program
+    """
 
     def convertToInteger(self, numberString):
         """
@@ -18,8 +21,16 @@ class InputHandler:
 
         return numberString
 
-    # Function that reads the file and returns the data matrix
+
     def readFile(self, inputFile, labelIndex, featureIndices):
+        """
+        This function reads the input file to the program and generate the data matrix for the program.
+
+        :param inputFile: path to input file
+        :param labelIndex: index of class label column in the data
+        :param featureIndices: indices of the feature columns in the data
+        :return: data matrix with in format [[feature1, feature2, .., classlabel],..]
+        """
         if os.path.isfile(inputFile) == False:
             print('Invalid file path')
             return 0
