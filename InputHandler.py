@@ -10,8 +10,11 @@ class InputHandler:
         :return:
             Converted integer if string is digit else the same string
         """
-        if numberString.isdigit():
+        try:
+            numberString = float(numberString)
             numberString = int(numberString)
+        except ValueError:
+            pass
 
         return numberString
 
@@ -25,7 +28,7 @@ class InputHandler:
             lines = file.readlines()
             featureMatrix = []
             for line in lines:
-                lineData = [ self.convertToInteger(x) for x in line.split(' ')]
+                lineData = [ self.convertToInteger(x) for x in line.rstrip('\n').split(' ')]
                 label = lineData[labelIndex]
                 features = lineData[featureIndices[0]:featureIndices[1]]
                 features.append(label)
