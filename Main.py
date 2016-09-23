@@ -10,7 +10,16 @@ import csv
 
 
 class Main:
+    """
+    Main class the entry point for the program
+    """
     def get_train_file(self, fileIndex=1, own_file=False):
+        """
+        This function generate the training file path according to the specified parameters
+        :param fileIndex: index of the file
+        :param own_file: True if file from own data, Else False
+        :return: path of the training file
+        """
         if own_file:
             return Constants.OWN_FILE_NAME.format(purpose='train')
         else:
@@ -18,6 +27,12 @@ class Main:
                                                     purpose='train')
 
     def get_test_file(self, fileIndex=1, own_file=False):
+        """
+        This function generate the test file path according to the specified parameters
+        :param fileIndex: index of the file
+        :param own_file: True if file from own data, Else False
+        :return: path of the test file
+        """
         if own_file:
             return Constants.OWN_FILE_NAME.format(purpose='test')
         else:
@@ -25,6 +40,10 @@ class Main:
                                                     purpose='test')
 
     def run_monk(self):
+        """
+        This function runs the program on monk data set
+        :return: none
+        """
         print ("--- DECISION TREE ALGORITHM (MONKS DATA-SET) --- ")
 
         # list to hold accuracies
@@ -112,6 +131,10 @@ class Main:
         # self.plot_accuracy_graph()
 
     def run_own(self):
+        """
+        This function runs the program with own data set
+        :return: none
+        """
         print ("\n--- DECISION TREE ALGORITHM (OWN DATA-SET) --- ")
 
         # create new data & input-handler object
@@ -174,6 +197,11 @@ class Main:
         pass
 
     def plot_accuracy_graph(self):
+        """
+        This function invokes the plotting module in the program. It will plot the Accuracy vs Tree Depth
+        for all 3 monk data sets.
+        :return: none
+        """
         # csv library is used only for writing the csv file
         #   csv file is used for plotting graph
         with open(Constants.RESULT_FILE, 'w') as csvfile:
