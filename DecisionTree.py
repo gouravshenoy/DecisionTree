@@ -5,7 +5,6 @@ import pydot
 # imports for computation
 import Constants
 import DataAnalyser
-from pprint import pprint
 
 
 class DecisionTree:
@@ -130,7 +129,7 @@ class DecisionTree:
                 else:
                     false_neg += 1
 
-        print ('***** CONFUSION MATRIX *****\n')
+        print ('\n- Confusion Matrix:')
         print ('{0:{align}{width}} '
                '{1:{align}{width2}}'.format(' ',
                                             ' predicted label ',
