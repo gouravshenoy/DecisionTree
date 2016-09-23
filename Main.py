@@ -88,9 +88,10 @@ class Main:
                 predicted_classes = decisionTree.test(data_test.getMatrix())
 
                 # calculate accuracy of model
-                dt_accuracy = decisionTree.calculateAccuracy(data_test.getMatrix(),
+                dt_accuracy, dt_misclassification = decisionTree.calculateAccuracy(data_test.getMatrix(),
                                                              predicted_classes)
                 print('- Accuracy of model = {}'.format(dt_accuracy))
+                print('- Misclassification Count = {}'.format(dt_misclassification))
                 accuracy_dict[tree_depth] = dt_accuracy
 
                 # plot the confusion matrix for depth 1,2
@@ -160,9 +161,10 @@ class Main:
             predicted_classes = decisionTree.test(data_test.getMatrix())
 
             # calculate accuracy of model
-            dt_accuracy = decisionTree.calculateAccuracy(data_test.getMatrix(),
+            dt_accuracy, dt_misclassification = decisionTree.calculateAccuracy(data_test.getMatrix(),
                                                          predicted_classes)
             print('- Accuracy of model = {}'.format(dt_accuracy))
+            print('- Misclassification Count = {}'.format(dt_misclassification))
 
             # plot the confusion matrix for depth 1,2
             if tree_depth in [1, 2]:

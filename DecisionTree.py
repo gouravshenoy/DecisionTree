@@ -109,7 +109,8 @@ class DecisionTree:
                 correctClassCount += 1
 
         accuracy = float(correctClassCount) / dataSetLen * 100
-        return accuracy
+        misclassification = dataSetLen - correctClassCount
+        return accuracy, misclassification
 
     def plotConfusionMatrix(self, dataSet, predictedLabels):
         true_pos = 0
