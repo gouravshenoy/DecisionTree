@@ -19,7 +19,6 @@ class DataAnalyser:
         # this data-structure holds vital information
         #   about the features, incl pos,neg counts
         featureDict = {}
-        filteredLabels = []
 
         for feature in availableFeatures:
             featureDict[feature] = {}
@@ -33,7 +32,7 @@ class DataAnalyser:
                     featureDict[feature][data[feature]][data[label_index]] += 1
 
         featureDict = self.calculateInfoGain(featureDict=featureDict)
-        pprint(featureDict)
+        # pprint(featureDict)
 
         # find the feature with max
         #   information gain
@@ -56,7 +55,6 @@ class DataAnalyser:
 
             # print total_pos_count, total_neg_count
             parent_entropy = self.calculateEntropy(total_pos_count, total_neg_count)
-            # print parent_entropy
 
             sum_feature_entropy = 0.0
             for featureValue, featureCounts in dict.items():

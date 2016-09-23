@@ -22,9 +22,9 @@ class DecisionTree:
     def createNode(self, data, subsetIndices, availableFeatures, nodeDepth, positiveCount=-1, negativeCount=-1):
 
         dataAnalyser = DataAnalyser.DataAnalyser()
-        print("\nNode Data--")
-        print("Subset Indices: ", subsetIndices)
-        print("Available Features: ", availableFeatures)
+        # print("\nNode Data--")
+        # print("Subset Indices: ", subsetIndices)
+        # print("Available Features: ", availableFeatures)
 
         # Check if the node has pure class
         if (positiveCount == 0 or negativeCount == 0):
@@ -36,13 +36,12 @@ class DecisionTree:
 
         # If node is not pure get the feature breakdown from analyzer
         featureBreakDown = dataAnalyser.analyseFeatures(data, subsetIndices, availableFeatures)
-        print("Feature Breakdown from Analyzer: ")
-        pprint(featureBreakDown)
+        # print("Feature Breakdown from Analyzer: ")
+        # pprint(featureBreakDown)
+
         feature = list(featureBreakDown.keys())[0]
         featureValues = list(featureBreakDown.get(feature).keys())
         featureValues.remove('info-gain')
-
-        # print("FeatureValue: " , featureValues)
 
         # calculate positive and negative class ratio at the node
         if (positiveCount == -1 or negativeCount == -1):
@@ -55,8 +54,6 @@ class DecisionTree:
         positiveRatio = float(positiveCount) / (positiveCount + negativeCount)
         negativeRatio = float(negativeCount) / (negativeCount + positiveCount)
 
-        print (positiveRatio)
-        print (negativeRatio)
         # Create a new node
         node = Node(feature, positiveRatio, negativeRatio, nodeDepth)
 
@@ -96,10 +93,113 @@ class DecisionTree:
                 featureToTest = currentNode.getFeatureIndex()
                 dataPointValue = dataPoint[featureToTest]
                 children = currentNode.getChildren()
-                currentNode = children[dataPointValue]
+                if dataPointValue in children:
+                    currentNode = children[dataPointValue]
+                else:
+                    break
 
             predictedLabel.append(currentNode.getClassLabel())
         return predictedLabel
+
+    def calculateAccuracy(self, dataSet, predictedLabels):
+        correctClassCount = 0
+        dataSetLen = len(dataSet)
+
+        for index, dataPoint in enumerate(dataSet):
+            if dataPoint[len(dataPoint) - 1] == predictedLabels[index]:
+                correctClassCount += 1
+
+        accuracy = float(correctClassCount) / dataSetLen * 100
+        return accuracy
+
+    def plotConfusionMatrix(self, dataSet, predictedLabels):
+        true_pos = 0
+        true_neg = 0
+        false_pos = 0
+        false_neg = 0
+
+        for index, dataPoint in enumerate(dataSet):
+            if dataPoint[len(dataPoint) - 1] == predictedLabels[index]:
+                if (predictedLabels[index] == 1):
+                    true_pos += 1
+                else:
+                    true_neg += 1
+            else:
+                if (predictedLabels[index] == 1):
+                    false_pos += 1
+                else:
+                    false_neg += 1
+
+        print ('***** CONFUSION MATRIX *****\n')
+        print ('{0:{align}{width}} '
+               '{1:{align}{width2}}'.format(' ',
+                                            ' predicted label ',
+                                            width=10,
+                                            width2=50,
+                                            align='^'))
+        print ('{0:{fill}{align}{width}} '.format('-',
+                                                  fill='-',
+                                                  width=65,
+                                                  align='^'))
+        print ('{0:{align}{width2}}'
+               '| {1:{align}{width}} | '
+               '{2:{align}{width}} | '.format('',
+                                              'label = 0 ',
+                                              'label = 1',
+                                              width2=24,
+                                              width=10,
+                                              align='^'))
+        print ('{0:{fill}{align}{width}} '.format('-',
+                                                  fill='-',
+                                                  width=65,
+                                                  align='^'))
+        print ('{0:{align}{width}} | '
+               '{1:{align}{width}} | '
+               '{2:{align}{width}} | '
+               '{3:{align}{width}} | '
+               '{4:{align}{width}} | '.format(' ',
+                                              'label = 0',
+                                              'TN: ' + str(true_neg),
+                                              'FP: ' + str(false_pos),
+                                              'Total = ' + str(true_neg + false_pos),
+                                              width=10,
+                                              align='^'))
+        print ('{0:{align}{width}} '
+               '{1:{fill}{align}{width2}}'.format('true label',
+                                                  '-',
+                                                  fill='-',
+                                                  width=10,
+                                                  width2=54,
+                                                  align='^'))
+        print ('{0:{align}{width}} | '
+               '{1:{align}{width}} | '
+               '{2:{align}{width}} | '
+               '{3:{align}{width}} | '
+               '{4:{align}{width}} | '.format(' ',
+                                              'label = 1',
+                                              'FN: ' + str(false_neg),
+                                              'TP: ' + str(true_pos),
+                                              'Total = ' + str(false_neg + true_pos),
+                                              width=10,
+                                              align='^'))
+        print ('{0:{fill}{align}{width}} '.format('-',
+                                                  fill='-',
+                                                  width=65,
+                                                  align='^'))
+        print ('{0:{align}{width2}} '
+               '{1:{align}{width}} | '
+               '{2:{align}{width}} | '
+               '{3:{align}{width}} | '.format('',
+                                              'Total = ' + str(true_neg + false_neg),
+                                              'Total = ' + str(false_pos + true_pos),
+                                              str(true_neg + false_neg + false_pos + true_pos),
+                                              width2=24,
+                                              width=10,
+                                              align='^'))
+        print ('{0:{fill}{align}{width}} '.format('-',
+                                                  fill='-',
+                                                  width=65,
+                                                  align='^'))
 
     def printTree(self):
         print('\n****Printing decision Tree-***')
