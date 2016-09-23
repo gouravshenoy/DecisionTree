@@ -6,7 +6,7 @@ import pandas as pd
 import Constants
 
 def plotResults():
-    result = pd.read_csv("/home/anwar/AML-PA-1/dt_accuracies.csv")
+    result = pd.read_csv(Constants.RESULT_FILE)
     #print("Test RESULT", result)
 
 

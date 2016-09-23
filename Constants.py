@@ -4,8 +4,8 @@
 import pydot
 
 # Input file to train the data
-INPUT_FILE_NAME = "/home/anwar/AML-PA-1/raw_data/monks-{index}.{purpose}"
-OWN_FILE_NAME = "/home/anwar/AML-PA-1/raw_data/mammographic-masses-{purpose}.txt"
+# INPUT_FILE_NAME = "/home/anwar/AML-PA-1/raw_data/monks-{index}.{purpose}"
+# OWN_FILE_NAME = "/home/anwar/AML-PA-1/raw_data/mammographic-masses-{purpose}.txt"
 RESULT_FILE = "dt_accuracies.csv"
 
 INPUT_FILE_NAME = "/Users/goshenoy/SOIC-Courses/Applied-ML/PA1/monks-{index}.{purpose}.txt"

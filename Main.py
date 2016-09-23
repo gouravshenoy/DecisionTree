@@ -76,6 +76,11 @@ class Main:
                 decisionTree.train(data_train, treeDepth=tree_depth)
 
                 # optional - print the generated tree
+                '''
+                    Uncomment this line to get a visualization of
+                    the decision tree generated. You need to have
+                    pydot python library installed for this to work.
+                '''
                 # decisionTree.printTree()
 
                 ''' ~~ Testing Phase ~~ '''
@@ -103,10 +108,10 @@ class Main:
             self.__avg_accuracies[tree_depth] = sum(d[tree_depth] for d in self.__monk_accuracies) / len(self.__monk_accuracies)
 
         # pprint(self.__avg_accuracies)
-        self.plot_accuracy_graph()
+        # self.plot_accuracy_graph()
 
     def run_own(self):
-        print ("--- DECISION TREE ALGORITHM (OWN DATA-SET) --- ")
+        print ("\n--- DECISION TREE ALGORITHM (OWN DATA-SET) --- ")
 
         # create new data & input-handler object
         data_train = Data.Data()
@@ -177,7 +182,8 @@ class Main:
                                  self.__monk_accuracies[0][depth],
                                  self.__monk_accuracies[1][depth],
                                  self.__monk_accuracies[2][depth], accuracy])
-            ResultPlotter.plotResults()
+
+        ResultPlotter.plotResults()
         pass
 
 # run main function
@@ -188,4 +194,7 @@ if __name__ == '__main__':
     main_obj.run_monk()
 
     # run DT algorithm on own data-set
-    # main_obj.run_own()
+    main_obj.run_own()
+
+    # plot accuracay graph for Monks data-set
+    main_obj.plot_accuracy_graph()
