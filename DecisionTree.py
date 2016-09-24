@@ -25,7 +25,7 @@ class DecisionTree:
         availableFeatures = data.getAvailableFeatures()
 
         self.__treeDepth = treeDepth
-        self.__rootNode = self.createNode(data, indices, availableFeatures, 1)
+        self.__rootNode = self.createNode(data, indices, availableFeatures, 0)
 
     def createNode(self, data, subsetIndices, availableFeatures, nodeDepth, positiveCount=-1, negativeCount=-1):
         """
@@ -246,14 +246,15 @@ class DecisionTree:
                                                   width=65,
                                                   align='^'))
 
-    def printTree(self):
+    def printTree(self, op_file=None):
         """
         This function creates the tree image and writes it on disk
         :return: none
         """
-        print('\n****Printing decision Tree-***')
-        self.__rootNode.drawNode()
-        Constants.GRAPH.write_png('decision_tree-depth-' + str(Constants.TREE_DEPTH) + '.png')
+        print('Saving decision tree visualization in dt_plots folder!')
+        self.__graph = pydot.Dot(graph_type='graph')
+        self.__rootNode.drawNode(graph=self.__graph)
+        self.__graph.write_png('dt-plots/' + op_file + '-depth-' + str(self.__treeDepth) + '.png')
 
 
 class Node:
@@ -315,13 +316,13 @@ class Node:
         else:
             print("NO CHILD")
 
-    def drawNode(self):
+    def drawNode(self, graph):
         node_name = "Feature: " + str(self.getFeatureIndex()) \
                     + "\nClass-Label: %d" % self.getClassLabel() \
                     + "\nDepth: %d" % self.getNodeDepth() \
                     + "\nPos-Ratio: " + str(self.getPositiveRatio()) \
                     + "\nNeg-Ratio: " + str(self.negativeRatio())
-        # print (node_name)
+
         if self.getChildren() != -1:
             dt_node = pydot.Node(str(uuid.uuid4()),
                                  style="filled",
@@ -329,13 +330,13 @@ class Node:
                                  label=node_name)
 
             for branchValue in self.getChildren():
-                child_node = self.getChildren()[branchValue].drawNode()
-                Constants.GRAPH.add_edge(pydot.Edge(dt_node, child_node, label=str(branchValue)))
+                child_node = self.getChildren()[branchValue].drawNode(graph=graph)
+                graph.add_edge(pydot.Edge(dt_node, child_node, label=str(branchValue)))
         else:
             dt_node = pydot.Node(str(uuid.uuid4()),
                                  style="filled",
                                  fillcolor="green",
                                  label=node_name)
 
-        Constants.GRAPH.add_node(dt_node)
+        graph.add_node(dt_node)
         return dt_node

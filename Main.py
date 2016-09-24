@@ -100,7 +100,8 @@ class Main:
                     the decision tree generated. You need to have
                     pydot python library installed for this to work.
                 '''
-                # decisionTree.printTree()
+                # if tree_depth in range(1,3):
+                #     decisionTree.printTree(op_file=os.path.basename(self.get_train_file(fileIndex)))
 
                 ''' ~~ Testing Phase ~~ '''
                 # get prediction accuracy from trained model
@@ -127,8 +128,7 @@ class Main:
         for tree_depth in range(1, Constants.TREE_DEPTH):
             self.__avg_accuracies[tree_depth] = sum(d[tree_depth] for d in self.__monk_accuracies) / len(self.__monk_accuracies)
 
-        # pprint(self.__avg_accuracies)
-        # self.plot_accuracy_graph()
+        return
 
     def run_own(self):
         """
@@ -177,7 +177,13 @@ class Main:
             decisionTree.train(data_train, treeDepth=tree_depth)
 
             # optional - print the generated tree
-            # decisionTree.printTree()
+            '''
+                Uncomment this line to get a visualization of
+                the decision tree generated. You need to have
+                pydot python library installed for this to work.
+            '''
+            if tree_depth in range(1,3):
+                decisionTree.printTree(op_file=os.path.basename(self.get_train_file(own_file=True)))
 
             ''' ~~ Testing Phase ~~ '''
             # get prediction accuracy from trained model
