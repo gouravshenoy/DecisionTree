@@ -7,6 +7,15 @@ from pprint import pprint
 class DataAnalyser:
 
     def analyseFeatures(self, dataSet, filterIndex=[], availableFeatures=[]):
+        """
+        This function analyzes the specified data with filter and returns the feature with maximum information gain.
+        It returns the feature with breakdown as follows-
+        {Feature1 :{feature_Value1:(+Count, -Count), feature_value2:{(+count, -count)})}}
+        :param dataSet: data for operation
+        :param filterIndex: index of the feature to filter the data
+        :param availableFeatures: list of available features to calculate information gain
+        :return: feature break-down dictionary for feature with maximum information gain
+        """
         # for index, data in enumerate(dataSet.getMatrix()):
         #     print '{index}, {list}'.format(index=index, list=data)
 
@@ -45,7 +54,11 @@ class DataAnalyser:
         return {max_gain_feature: featureDict[max_gain_feature]}
 
     def calculateInfoGain(self, featureDict):
-
+        """
+        Calculates information gain for specified feature.
+        :param featureDict: feature dictionary
+        :return: feature dictionary with added information gain
+        """
         for featureIndex, dict in featureDict.items():
             total_pos_count = 0
             total_neg_count = 0
@@ -77,6 +90,12 @@ class DataAnalyser:
 
 
     def calculateEntropy(self, posCount=0, negCount=0):
+        """
+        Calculates entropy from positive and negative counts specified.
+        :param posCount: positive class label count
+        :param negCount: negative class label count
+        :return: entropy for the data
+        """
         # if either count is 0,
         #   then entropy is 0
         if posCount>0 and negCount>0:

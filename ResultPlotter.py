@@ -6,6 +6,10 @@ import pandas as pd
 import Constants
 
 def plotResults():
+    """
+    This function draws the plot of Accuracy vs Tree Depth.
+    :return: None
+    """
     result = pd.read_csv(Constants.RESULT_FILE)
     #print("Test RESULT", result)
 

@@ -1,7 +1,8 @@
 
-# This is a class which holds the data
 class Data:
-
+    """
+    This class holds the data matrix and related function
+    """
     def __init__(self):
         self.__matrix = []
 
@@ -12,21 +13,21 @@ class Data:
         self.__matrix = matrix
 
     def getAvailableFeatures(self):
+        """
+        This function returns the available features in the data.
+        :return: list of available features
+        """
         matrix = self.__matrix
         return list(range(0,len(matrix[0])-1))
 
-    def getFeaturesBreakDown(self):
-        features = self.getAvailableFeatures()
-        breakDown = []
-        for datapoint in self.__matrix:
-            label = datapoint[-1]
-            for feature in features:
-                featureValue = datapoint[feature]
-                featureBreakDown = breakDown[feature]
-                featureBreakDown[featureValue][label] += 1
-        return breakDown
-
     def getDataIndices(self, featureIndex, featureValue, subsetIndices):
+        """
+        This function list of indices in the data (subset of data) having particular feature value.
+        :param featureIndex: feature index to subset
+        :param featureValue: value of the feature to compare
+        :param subsetIndices: list of current indices (current subset of the data)
+        :return: list of indices
+        """
         indices = []
 
         if len(subsetIndices) == 0:
@@ -38,10 +39,3 @@ class Data:
                 indices.append(dataPointIndex)
 
         return indices
-
-class DataSubset(Data):
-
-    __subsetIndices = []
-
-    def addSubsetIndices(self, index):
-        self.__subsetIndices.append(index)
